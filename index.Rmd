@@ -1,0 +1,60 @@
+---
+title: "2018 Pac 12 Men's Basketball Data"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library("ggplot2")
+library("dplyr")
+library("plotly")
+library("knitr")
+```
+
+```{r sourceCode, echo = FALSE}
+source("scripts/col_plot.R")
+source("scripts/point_jitter.R")
+source("scripts/pac-12_mp_total_pts.R")
+
+source("scripts/Summaryfunction.R")
+source("scripts/Summary.table.R")
+```
+
+Our report extensively analyzes individual player information accross the PAC 12 mens college basketball league. The data sets we analyzed contains individual player statistics relevant to NCAA basketball with general information, such as player names, player position type, player's school, conference, and player statistics, such as minutes played, total points, assists, rebounds, ect. To make this information easier to interpret, we limited the scope of our report to just the Pac 12 conference.
+
+# Summary
+``` {r summary, echo = FALSE}
+list <- get_summary_info()
+points <- list[1]
+three_mean <- list[2]
+total_player_minutes_played <- list[3]
+rebound <- list[4]
+assist <- list[5]
+```
+For a general overview of Pac 12 basketball, we found the average minutes played by individual players accross the Pac 12 conference to be `r total_player_minutes_played`, with the average three point shots attempted accross all players being `r three_mean` and the average points scored across the entire season being `r points`. Furthermore, we calculated the average total rebounds of individual players in the Pac 12 to be `r rebound` and the average total assists to be `r assist`. These statistics are included in the summary table below.
+
+# Summary Table
+We thought these statistics would provide a general overview of the Pac 12 Basketball League.
+``` {r echo = FALSE}
+kable(get_summary_table("data/Player_Stats.csv"))
+```
+
+## Plot: Column Plot
+This plot details the total Field Goals (shot attempts), Field Goals made, and Field Goals missed of all teams in the Pac 12 men's basketball conference. The column plot type allows us to easily investigate the scoring efficiency of each Pac 12 team becuase we can easily eyeball the difference between the school's Fields Goals Missed column compared the Field Goals Made column, a school that has very little difference (or even better, a school that has a Field Goals Made column GREATER than the Field Goals Missed column such as Arizona) would be considered a high efficiency scoring team.
+``` {r echo = FALSE}
+get_col_plot()
+```
+
+## Plot: Jitter Plot
+This plot assists in comparing an individual players defensive effiency by plotting the player's defensive impact (calculated as being the sum of the player's steals and blocks) and plotting it against their total number of personal fouls during the 2018 season. Furthermore, it also differentiates by the player's position (i.e. C = Center, F = Forward, and G = Guard). <br>
+A player who has a high number of fouls but a very little defensive impact (i.e. bad defensive efficiency) would be represented high and on the left of the plot above the x = y line. A player who has a few number of fouls and large defensive impact (i.e. good defensive efficiency) would be represented lower and far to the right of the plot below the x = y line. A player with a similar number of fouls to defensive impact (i.e. neutral efficiency) would be represented somewhere in the middle along the x = y line.
+``` {r echo = FALSE}
+get_jitter_plot()
+```
+
+## Plot: Point Plot
+The Player's Minutes versus Points point scatter plot expresses a variety of interesting information about college basketball players. Why we decided to insert this particular chart is that it displays an interpretation of data that deciphers underlying information which is hard to visualize by pure facts and tables. It's common knowledge that in theory the more you play in minutes the more points you have. But it seems like based on this trend, it is exponential. Also because of the added feature showing that different markers have colors correlating with their own school you can see what schools score more points.
+
+``` {r echo = FALSE}
+pac_12_mp_total_pts("data/Player_Stats.csv")
+```
